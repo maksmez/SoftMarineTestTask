@@ -1,0 +1,55 @@
+﻿<Window x:Class="SoftMarine.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SoftMarine" d:DataContext="{d:DesignInstance Type=local:AllInspectionsViewModel}"
+        mc:Ignorable="d"
+        Title="Управление инспекциями" Height="450" Width="800">
+
+    <Grid ShowGridLines="True"> 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height=".15*"></RowDefinition>
+            <RowDefinition Height=".15*"></RowDefinition>
+            <RowDefinition Height=".13*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15" Grid.Column="0" Grid.Row="0">Инспекции</Label>
+        <Label HorizontalAlignment="Right"  VerticalAlignment="Center" FontSize="15" Grid.Column="1" Grid.Row="0" Background="Gray">Справочник "Инспекторы"</Label>
+
+
+        <StackPanel Orientation="Horizontal" Background="Aquamarine" Grid.Column="0" Grid.Row="1">
+            <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Инспектор</Label>
+            <ComboBox HorizontalAlignment="Right"  VerticalAlignment="Center" Width="150">
+                <ComboBoxItem>
+                    <Label FontSize="15">Дяaдя Gtnz</Label>
+                </ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Background="Purple" Grid.Column="2" Grid.Row="1">
+            <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Название</Label>
+            <TextBox HorizontalAlignment="Right"  VerticalAlignment="Center" FontSize="15" Width="150"></TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Background="ForestGreen" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" >
+            <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Left" Command="{Binding OpenAddInspectionCommand}">Добавить</Button>
+            <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Center" Command="{Binding DeleteInspectionCommand}">Удалить</Button>
+            <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Right">Изменить</Button>
+        </StackPanel>
+        <DataGrid IsReadOnly="True" SelectionMode="Single" FontSize="15" AutoGenerateColumns="False" Grid.ColumnSpan="2" Grid.Row="3" Background="Orange" ItemsSource="{Binding Inspections}" SelectedItem="{Binding SelectedInspection}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="*" Header="Название" Binding="{Binding Name}" />
+                <DataGridTextColumn Width="100" Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" />
+                <DataGridTextColumn Width="*" Header="Инспектор" Binding="{Binding Inspector}" />
+                <DataGridTextColumn Width="*" Header="Комментарий" Binding="{Binding Comment}" />
+                <DataGridTextColumn Width="100" Header="Замечаний" Binding="{Binding Remarks.Count}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
