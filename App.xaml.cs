@@ -12,6 +12,7 @@ namespace SoftMarine
             var mainViewModel = new AllInspectionsViewModel(navigationService);
 
             var mainWindow = new MainWindow { DataContext = mainViewModel };
+            mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             mainWindow.Show();
         }
     }

@@ -68,24 +68,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AddInspection.xaml">
+    <Page Include="View\AddInspection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\EditInspection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddInspection.xaml.cs">
+    <Compile Include="ViewModel\EditInspectionViewModel.cs" />
+    <Compile Include="View\AddInspection.xaml.cs">
       <DependentUpon>AddInspection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AddInspectionViewModel.cs" />
-    <Compile Include="AllInspectionsViewModel.cs" />
+    <Compile Include="ViewModel\AddInspectionViewModel.cs" />
+    <Compile Include="ViewModel\AllInspectionsViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="INavigationService.cs" />
+    <Compile Include="NavigationService\INavigationService.cs" />
     <Compile Include="Migrations\202501311629547_InitialCreate.cs" />
     <Compile Include="Migrations\202501311629547_InitialCreate.Designer.cs">
       <DependentUpon>202501311629547_InitialCreate.cs</DependentUpon>
@@ -103,13 +108,16 @@
       <DependentUpon>202502031217394_FixRelationships.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="NavigationService.cs" />
+    <Compile Include="NavigationService\NavigationService.cs" />
     <Compile Include="NullToBooleanConverter.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="Remark.cs" />
+    <Compile Include="Model\Remark.cs" />
     <Compile Include="SoftMarinDbContext.cs" />
-    <Compile Include="Inspection.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Model\Inspection.cs" />
+    <Compile Include="View\EditInspection.xaml.cs">
+      <DependentUpon>EditInspection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

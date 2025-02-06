@@ -23,17 +23,7 @@ namespace SoftMarine
     {
         public MainWindow()
         {
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
-
-        }
-
-        private void Add_Inspection(object sender, RoutedEventArgs e)
-        {
-            AddInspection addInspection = new AddInspection();
-            addInspection.Owner = this;
-            addInspection.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            addInspection.Show();
         }
     }
 }

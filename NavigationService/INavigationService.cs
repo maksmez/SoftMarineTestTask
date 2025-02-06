@@ -9,5 +9,6 @@ namespace SoftMarine
     public interface INavigationService
     {
         void OpenAddInspectionWindow(Action updateMainGrid);
+        void OpenEditInspectionWindow(Inspection inspection, Action updateMainGrid);
     }
 }

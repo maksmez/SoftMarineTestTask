@@ -92,7 +92,7 @@ namespace SoftMarine
 
 
 
-        private bool ValidateInspection(out Inspection inspection, out List<string> errorMessages)
+        public bool ValidateInspection(out Inspection inspection, out List<string> errorMessages)
         {
             var listErrors = new List<string>();
             bool isValid = true;

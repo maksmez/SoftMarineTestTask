@@ -20,18 +20,17 @@ namespace SoftMarine
 
         public ICommand OpenAddInspectionCommand { get; } //Команда для открытия окна добавления инспекии
         public ICommand DeleteInspectionCommand { get; } // Команда для удаления
+        public ICommand EditInspectionCommand { get; } // Команда для открытия окна редактирования инспекции
 
-
-
-        public AllInspectionsViewModel(INavigationService navigationService)
+        public ObservableCollection<Inspection> Inspections
         {
-            _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-            OpenAddInspectionCommand = new RelayCommand(OpenAddInspectionWindow);
-            DeleteInspectionCommand = new RelayCommand(DeleteInspection, CanDeleteInspection);
-            Inspections = new ObservableCollection<Inspection>();
-            LoadInspections(); // Загружаем данные при создании ViewModel
+            get => _inspections;
+            set
+            {
+                _inspections = value;
+                OnPropertyChanged(nameof(Inspections));
+            }
         }
-
         public Inspection SelectedInspection
         {
             get => _selectedInspection;
@@ -42,8 +41,25 @@ namespace SoftMarine
 
                 // Обновляем доступность кнопки удаления
                 (DeleteInspectionCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                // Обновляем доступность кнопки редактирования
+                (EditInspectionCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+        public AllInspectionsViewModel(INavigationService navigationService)
+        {
+            _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+            OpenAddInspectionCommand = new RelayCommand(OpenAddInspectionWindow);
+            DeleteInspectionCommand = new RelayCommand(DeleteInspection, IsSelectInspection);
+            EditInspectionCommand = new RelayCommand(EditInspection, IsSelectInspection);
+            Inspections = new ObservableCollection<Inspection>();
+            LoadInspections(); // Загружаем данные при создании ViewModel
+        }
+
+        private void EditInspection()
+        {
+            _navigationService.OpenEditInspectionWindow(SelectedInspection, LoadInspections);
+        }
+
 
         private void DeleteInspection()
         {
@@ -68,7 +84,7 @@ namespace SoftMarine
             }
         }
 
-        private bool CanDeleteInspection()
+        private bool IsSelectInspection()
         {
             return SelectedInspection != null;
         }
@@ -77,17 +93,6 @@ namespace SoftMarine
         private void OpenAddInspectionWindow()
         {
             _navigationService.OpenAddInspectionWindow(LoadInspections);
-        }
-
-
-        public ObservableCollection<Inspection> Inspections
-        {
-            get => _inspections;
-            set
-            {
-                _inspections = value;
-                OnPropertyChanged(nameof(Inspections));
-            }
         }
 
         // Метод для загрузки инспекций из базы данных

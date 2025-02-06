@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SoftMarine.View;
+using SoftMarine.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,21 @@ namespace SoftMarine
             };
 
             addInspectionWindow.ShowDialog();
+        }
+
+        public void OpenEditInspectionWindow(Inspection inspection,Action updateMainGrid)
+        {
+            var editInspectionVM = new EditInspectionViewModel(inspection);
+            var editInspectionWindow = new EditInspection { DataContext = editInspectionVM };
+            editInspectionWindow.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            // Закрываем окно при завершении операции
+            editInspectionVM.RequestClose += () =>
+            {
+                editInspectionWindow.Close();
+                updateMainGrid?.Invoke(); // Обновляем список в главном окне
+            };
+
+            editInspectionWindow.ShowDialog();
         }
     }
 }
