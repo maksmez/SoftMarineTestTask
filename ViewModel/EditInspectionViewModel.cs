@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SoftMarine.ViewModel
@@ -88,6 +89,20 @@ namespace SoftMarine.ViewModel
 
         private void Save(Inspection inspection)
         {
+            var inspection_form = new Inspection
+            {
+                Name = Name,
+                Date = Date,
+                Inspector = Inspector,
+                Comment = Comment,
+                Remarks = Remarks.ToList()
+            };
+            if (!InspectionValidator.ValidateInspection(inspection_form, out var errorMessages))
+            {
+                MessageBox.Show($"Проверьте поля на ошибки:\n{string.Join("\n", errorMessages)}", "Ошибка в данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             using (var context = new SoftMarinDbContext())
             {
                 var inspectionToUpdate = context.Inspections.Find(inspection.Id);
@@ -125,11 +140,10 @@ namespace SoftMarine.ViewModel
                             });
                         }
                     }
-
-
                     context.SaveChanges();
                 }
             }
+            MessageBox.Show($"Инспекция изменена!", "Изменение инспекции", MessageBoxButton.OK, MessageBoxImage.Information);
 
             RequestClose?.Invoke();
         }

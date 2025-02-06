@@ -25,5 +25,13 @@ namespace SoftMarine
         {
             InitializeComponent();
         }
+
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is AllInspectionsViewModel viewModel && viewModel.SelectedInspection != null)
+            {
+                viewModel.EditInspectionCommand.Execute(null);
+            }
+        }
     }
 }

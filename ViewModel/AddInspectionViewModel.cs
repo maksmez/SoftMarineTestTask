@@ -90,53 +90,20 @@ namespace SoftMarine
             }
         }
 
-
-
-        public bool ValidateInspection(out Inspection inspection, out List<string> errorMessages)
-        {
-            var listErrors = new List<string>();
-            bool isValid = true;
-
-            inspection = new Inspection
-            {
-                Name = Name,
-                Date = Date,
-                Inspector = Inspector,
-                Comment = Comment,
-                Remarks = Remarks.ToList()
-            };
-
-            var validationContextInspection = new ValidationContext(inspection);
-            var validationResultsInspection = new List<ValidationResult>();
-
-            // Проверяем валидность объекта
-            Validator.TryValidateObject(inspection, validationContextInspection, validationResultsInspection);
-
-            // Собираем сообщения об ошибках
-            listErrors.AddRange(validationResultsInspection.Select(x => x.ErrorMessage).ToList());
-
-            for (int i = 0; i < Remarks.Count; i++)
-            {
-                var validationResultsRemarks = new List<ValidationResult>();
-                var validationContextRemarks = new ValidationContext(Remarks[i]);
-                Validator.TryValidateObject(Remarks[i], validationContextRemarks, validationResultsRemarks);
-                listErrors.AddRange(validationResultsRemarks.Select(x => $"Ошибка в {i + 1} замечании: " + x.ErrorMessage).ToList());
-            }
-
-            if (listErrors.Count > 0)
-                isValid = false;
-
-            errorMessages = listErrors;
-            return isValid;
-        }
-
-
         private void Save()
         {
             try
             {
-                // Валидируем данные перед созданием объекта
-                if (!ValidateInspection(out var inspection, out var errorMessages))
+                var inspection = new Inspection
+                {
+                    Name = Name,
+                    Date = Date,
+                    Inspector = Inspector,
+                    Comment = Comment,
+                    Remarks = Remarks.ToList()
+                };
+
+                if (!InspectionValidator.ValidateInspection(inspection, out var errorMessages))
                 {
                     MessageBox.Show($"Проверьте поля на ошибки:\n{string.Join("\n", errorMessages)}", "Ошибка в данных!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -147,15 +114,18 @@ namespace SoftMarine
                     context.Inspections.Add(inspection);
                     context.SaveChanges();
                 }
-                UpdateGrid?.Invoke(); // Сообщаем главному окну обновить DataGrid
-                MessageBox.Show("Инспекция успешно сохранена!","Отлично!", MessageBoxButton.OK, MessageBoxImage.Information);
-                RequestClose.Invoke();
+
+                UpdateGrid?.Invoke();
+                MessageBox.Show($"Инспекция создана!", "Содание инспекции", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                RequestClose?.Invoke();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void Close()
         {

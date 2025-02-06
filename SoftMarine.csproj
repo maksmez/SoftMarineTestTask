@@ -80,6 +80,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="InspectionValidator.cs" />
     <Compile Include="ViewModel\EditInspectionViewModel.cs" />
     <Compile Include="View\AddInspection.xaml.cs">
       <DependentUpon>AddInspection.xaml</DependentUpon>

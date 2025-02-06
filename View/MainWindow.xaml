@@ -42,7 +42,7 @@
             <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Center" Command="{Binding DeleteInspectionCommand}">Удалить</Button>
             <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Right" Command="{Binding EditInspectionCommand}">Изменить</Button>
         </StackPanel>
-        <DataGrid IsReadOnly="True" SelectionMode="Single" FontSize="15" AutoGenerateColumns="False" Grid.ColumnSpan="2" Grid.Row="3" Background="Orange" ItemsSource="{Binding Inspections}" SelectedItem="{Binding SelectedInspection}">
+        <DataGrid IsReadOnly="True" SelectionMode="Single" FontSize="15" AutoGenerateColumns="False" Grid.ColumnSpan="2" Grid.Row="3" Background="Orange" ItemsSource="{Binding Inspections}" SelectedItem="{Binding SelectedInspection}" MouseDoubleClick="DataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="*" Header="Название" Binding="{Binding Name}" />
                 <DataGridTextColumn Width="100" Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" />
