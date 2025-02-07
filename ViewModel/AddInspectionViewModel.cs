@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoftMarine.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,29 +18,24 @@ namespace SoftMarine
     {
         private string _name;
         private DateTime _date;
-        private string _inspector;
         private string _comment;
         private ObservableCollection<Remark> _remarks;
+        private ObservableCollection<Inspector> _inspectors;
+        private Inspector _selectedInspector;
+
         public event Action RequestClose; // Событие для закрытия окна AddInspection
         public event Action UpdateGrid; // Событие для обновления DataGrid в главном окне
         public ICommand SaveCommand { get; }
         public ICommand CloseCommand { get; }
 
-        
-        //Список инспекторов
-        public ObservableCollection<string> Inspectors { get; set; } = new ObservableCollection<string>
-        {
-            "Контрабандистович А.У (88005553535)",
-            "Пограничников Г.Г (123987456)",
-            "Оружников П.П (0987654321)"
-        };
         public AddInspectionViewModel()
         {
-            Inspector = Inspectors[0];
             Date = DateTime.Now; //Для установки текущей даты в DatePicker
             Remarks = new ObservableCollection<Remark>();
             SaveCommand = new RelayCommand(Save);
             CloseCommand = new RelayCommand(Close);
+            Inspectors = InspectorService.GetInspectors();
+
         }
 
         public string Name
@@ -60,16 +56,7 @@ namespace SoftMarine
                 OnPropertyChanged(nameof(Date));
             }
         }
-        public string Inspector
-        {
-            get => _inspector;
-            set
-            {
-                _inspector = value;
-                OnPropertyChanged(nameof(Inspector));
-            }
-        }
-
+        
         public string Comment
         {
             get => _comment;
@@ -90,6 +77,25 @@ namespace SoftMarine
             }
         }
 
+        public ObservableCollection<Inspector> Inspectors
+        {
+            get => _inspectors;
+            set
+            {
+                _inspectors = value;
+                OnPropertyChanged(nameof(Inspectors));
+            }
+        }
+
+        public Inspector SelectedInspector
+        {
+            get => _selectedInspector;
+            set
+            {
+                _selectedInspector = value;
+                OnPropertyChanged(nameof(SelectedInspector));
+            }
+        }
         private void Save()
         {
             try
@@ -98,7 +104,7 @@ namespace SoftMarine
                 {
                     Name = Name,
                     Date = Date,
-                    Inspector = Inspector,
+                    InspectorId = SelectedInspector.Id,
                     Comment = Comment,
                     Remarks = Remarks.ToList()
                 };

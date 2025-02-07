@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoftMarine.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,6 +16,7 @@ namespace SoftMarine
     public class AllInspectionsViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<Inspection> _inspections;
+        private ObservableCollection<Inspector> _inspectors;
         private Inspection _selectedInspection;
         private readonly INavigationService _navigationService;
 
@@ -29,6 +31,16 @@ namespace SoftMarine
             {
                 _inspections = value;
                 OnPropertyChanged(nameof(Inspections));
+            }
+        }
+
+        public ObservableCollection<Inspector> Inspectors
+        {
+            get => _inspectors;
+            set
+            {
+                _inspectors = value;
+                OnPropertyChanged(nameof(Inspectors));
             }
         }
         public Inspection SelectedInspection
@@ -53,6 +65,8 @@ namespace SoftMarine
             EditInspectionCommand = new RelayCommand(EditInspection, IsSelectInspection);
             Inspections = new ObservableCollection<Inspection>();
             LoadInspections(); // Загружаем данные при создании ViewModel
+            Inspectors = InspectorService.GetInspectors();
+
         }
 
         private void EditInspection()
@@ -102,7 +116,7 @@ namespace SoftMarine
             {
                 // Загружаем инспекции из базы данных
                 var inspections = context.Inspections
-                    .Include(x=>x.Remarks) // Если нужно загрузить связанные замечания
+                    .Include(x=>x.Remarks).Include(y=>y.Inspector) // Если нужно загрузить связанные замечания
                     .ToList();
 
                 // Очищаем коллекцию и добавляем загруженные данные

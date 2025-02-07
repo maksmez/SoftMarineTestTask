@@ -26,11 +26,22 @@
 
         <StackPanel Orientation="Horizontal" Background="Aquamarine" Grid.Column="0" Grid.Row="1">
             <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Инспектор</Label>
-            <ComboBox HorizontalAlignment="Right"  VerticalAlignment="Center" Width="150">
-                <ComboBoxItem>
-                    <Label FontSize="15">Дяaдя Gtnz</Label>
-                </ComboBoxItem>
+            <ComboBox HorizontalAlignment="Right" VerticalAlignment="Center" Width="200"
+          ItemsSource="{Binding Inspectors}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="Name"/>
+                                    <Binding Path="Number"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
+
         </StackPanel>
         <StackPanel Orientation="Horizontal" Background="Purple" Grid.Column="2" Grid.Row="1">
             <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Название</Label>
@@ -46,7 +57,20 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Width="*" Header="Название" Binding="{Binding Name}" />
                 <DataGridTextColumn Width="100" Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" />
-                <DataGridTextColumn Width="*" Header="Инспектор" Binding="{Binding Inspector}" />
+                <DataGridTemplateColumn Header="Инспектор">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{1} ({0})">
+                                        <Binding Path="Inspector.Number"/>
+                                        <Binding Path="Inspector.Name"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Width="*" Header="Комментарий" Binding="{Binding Comment}" />
                 <DataGridTextColumn Width="100" Header="Замечаний" Binding="{Binding Remarks.Count}" />
             </DataGrid.Columns>

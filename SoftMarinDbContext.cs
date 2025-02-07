@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using SoftMarine.Model;
 
 
 namespace SoftMarine
@@ -14,6 +15,9 @@ namespace SoftMarine
 
         public DbSet<Inspection> Inspections { get; set; }
         public DbSet<Remark> Remarks { get; set; }
+        public DbSet<Inspector> Inspectors { get; set; }
+
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -22,6 +26,13 @@ namespace SoftMarine
                 .HasMany(i => i.Remarks)
                 .WithRequired(r => r.Inspection)
                 .HasForeignKey(r => r.InspectionId);
+
+            // Один ко многим: Inspector -> Inspections
+            modelBuilder.Entity<Inspection>()
+                .HasRequired(i => i.Inspector)
+                .WithMany(inspector => inspector.Inspections)
+                .HasForeignKey(i => i.InspectorId)
+                .WillCascadeOnDelete(false); // Чтобы избежать циклического удаления
 
             base.OnModelCreating(modelBuilder);
         }

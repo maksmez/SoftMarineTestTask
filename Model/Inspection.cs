@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoftMarine.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,11 +16,14 @@ namespace SoftMarine
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "Инспектор должен быть указан.")]
-        public string Inspector { get; set; }
-        public int Count { get; set; }
+        //public string Inspector { get; set; }
         public string Comment { get; set; }
 
         // Навигационное свойство для связи с Remark
         public virtual ICollection<Remark> Remarks { get; set; } = new List<Remark>();
+
+        // Внешний ключ для инспектора
+        public int InspectorId { get; set; }
+        public virtual Inspector Inspector { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SoftMarine.Model;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SoftMarine.ViewModel
     {
         private string _name;
         private DateTime _date;
-        private string _inspector;
+        private Inspector _inspector;
         private string _comment;
         private ObservableCollection<Remark> _remarks;
         public event Action UpdateGrid; // Событие для обновления DataGrid в главном окне
@@ -40,7 +41,7 @@ namespace SoftMarine.ViewModel
                 OnPropertyChanged(nameof(Date));
             }
         }
-        public string Inspector
+        public Inspector Inspector
         {
             get => _inspector;
             set
@@ -77,7 +78,7 @@ namespace SoftMarine.ViewModel
             }
         }
         //Список инспекторов
-        public ObservableCollection<string> Inspectors { get; set; } = new ObservableCollection<string>
+        public ObservableCollection<string> InspectorsCombo { get; set; } = new ObservableCollection<string>
         {
             "Контрабандистович А.У (88005553535)",
             "Пограничников Г.Г (123987456)",
