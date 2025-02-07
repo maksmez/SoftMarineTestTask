@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:SoftMarine"
              >
     <Application.Resources>
-        <local:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     </Application.Resources>
 </Application>

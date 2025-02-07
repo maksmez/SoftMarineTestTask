@@ -16,9 +16,10 @@ namespace SoftMarine.ViewModel
         private ObservableCollection<Remark> _remarks;
         public event Action UpdateGrid; // Событие для обновления DataGrid в главном окне
         public event Action RequestClose;
-
+        private Remark _selectedRemark;
         public ICommand SaveCommand { get; }
         public ICommand CloseCommand { get; }
+        public ICommand DeleteRemarkCommand { get; }
 
 
         public string Name
@@ -66,7 +67,15 @@ namespace SoftMarine.ViewModel
                 OnPropertyChanged(nameof(Remarks));
             }
         }
-
+        public Remark SelectedRemark
+        {
+            get => _selectedRemark;
+            set
+            {
+                _selectedRemark = value;
+                OnPropertyChanged(nameof(SelectedRemark));
+            }
+        }
         //Список инспекторов
         public ObservableCollection<string> Inspectors { get; set; } = new ObservableCollection<string>
         {
@@ -83,9 +92,14 @@ namespace SoftMarine.ViewModel
             Comment = inspection.Comment;
             Remarks = new ObservableCollection<Remark>(inspection.Remarks);
             SaveCommand = new RelayCommand(() => Save(inspection));
+            DeleteRemarkCommand = new RelayCommand(() => DeleteRemarkExecute(SelectedRemark));
+
             CloseCommand = new RelayCommand(Close);
         }
-
+        private void DeleteRemarkExecute(Remark remark)
+        {
+          Remarks.Remove(remark);
+        }
 
         private void Save(Inspection inspection)
         {

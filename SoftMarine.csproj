@@ -110,7 +110,6 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NavigationService\NavigationService.cs" />
-    <Compile Include="NullToBooleanConverter.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Model\Remark.cs" />
     <Compile Include="SoftMarinDbContext.cs" />
