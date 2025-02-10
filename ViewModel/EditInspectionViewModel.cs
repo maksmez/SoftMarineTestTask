@@ -12,12 +12,16 @@ namespace SoftMarine.ViewModel
     {
         private string _name;
         private DateTime _date;
-        private Inspector _inspector;
         private string _comment;
+        private Remark _selectedRemark;
+        private Inspector _selectedInspector;
+
         private ObservableCollection<Remark> _remarks;
+        private ObservableCollection<Inspector> _inspectors;
+
+
         public event Action UpdateGrid; // Событие для обновления DataGrid в главном окне
         public event Action RequestClose;
-        private Remark _selectedRemark;
         public ICommand SaveCommand { get; }
         public ICommand CloseCommand { get; }
         public ICommand DeleteRemarkCommand { get; }
@@ -41,15 +45,6 @@ namespace SoftMarine.ViewModel
                 OnPropertyChanged(nameof(Date));
             }
         }
-        public Inspector Inspector
-        {
-            get => _inspector;
-            set
-            {
-                _inspector = value;
-                OnPropertyChanged(nameof(Inspector));
-            }
-        }
         public string Comment
         {
             get => _comment;
@@ -57,15 +52,6 @@ namespace SoftMarine.ViewModel
             {
                 _comment = value;
                 OnPropertyChanged(nameof(Comment));
-            }
-        }
-        public ObservableCollection<Remark> Remarks
-        {
-            get => _remarks;
-            set
-            {
-                _remarks = value;
-                OnPropertyChanged(nameof(Remarks));
             }
         }
         public Remark SelectedRemark
@@ -77,21 +63,42 @@ namespace SoftMarine.ViewModel
                 OnPropertyChanged(nameof(SelectedRemark));
             }
         }
-        //Список инспекторов
-        public ObservableCollection<string> InspectorsCombo { get; set; } = new ObservableCollection<string>
+        public Inspector SelectedInspector
         {
-            "Контрабандистович А.У (88005553535)",
-            "Пограничников Г.Г (123987456)",
-            "Оружников П.П (0987654321)"
-        };
-
+            get => _selectedInspector;
+            set
+            {
+                _selectedInspector = value;
+                OnPropertyChanged(nameof(SelectedInspector));
+            }
+        }
+        public ObservableCollection<Remark> Remarks
+        {
+            get => _remarks;
+            set
+            {
+                _remarks = value;
+                OnPropertyChanged(nameof(Remarks));
+            }
+        }
+        public ObservableCollection<Inspector> Inspectors
+        {
+            get => _inspectors;
+            set
+            {
+                _inspectors = value;
+                OnPropertyChanged(nameof(Inspectors));
+            }
+        }
         public EditInspectionViewModel(Inspection inspection)
         {
             Name = inspection.Name;
             Date = inspection.Date;
-            Inspector = inspection.Inspector;
             Comment = inspection.Comment;
             Remarks = new ObservableCollection<Remark>(inspection.Remarks);
+            Inspectors = InspectorService.GetInspectors();
+            SelectedInspector = Inspectors.FirstOrDefault(i => i.Id == inspection.Inspector.Id);
+
             SaveCommand = new RelayCommand(() => Save(inspection));
             DeleteRemarkCommand = new RelayCommand(() => DeleteRemarkExecute(SelectedRemark));
 
@@ -108,7 +115,7 @@ namespace SoftMarine.ViewModel
             {
                 Name = Name,
                 Date = Date,
-                Inspector = Inspector,
+                InspectorId = SelectedInspector.Id,
                 Comment = Comment,
                 Remarks = Remarks.ToList()
             };
@@ -125,7 +132,7 @@ namespace SoftMarine.ViewModel
                 {
                     inspectionToUpdate.Name = Name;
                     inspectionToUpdate.Date = Date;
-                    inspectionToUpdate.Inspector = Inspector;
+                    inspectionToUpdate.InspectorId = SelectedInspector.Id;
                     inspectionToUpdate.Comment = Comment;
                     // Удаляем старые замечания из базы
                     var remarksToRemove = inspectionToUpdate.Remarks

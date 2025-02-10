@@ -35,6 +35,8 @@ namespace SoftMarine
             SaveCommand = new RelayCommand(Save);
             CloseCommand = new RelayCommand(Close);
             Inspectors = InspectorService.GetInspectors();
+            SelectedInspector = Inspectors.FirstOrDefault();
+
 
         }
 

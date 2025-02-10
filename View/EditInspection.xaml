@@ -34,9 +34,21 @@
                 <TextBox  Grid.Row="0" Grid.Column="1" FontSize="15" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="150" Text="{Binding Name, ValidatesOnDataErrors=True}"></TextBox>
 
                 <!--Инспектор-->
-                <Label Grid.Row="1" Grid.Column="0" FontSize="15" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="150">Инспектр</Label>
-                <ComboBox Grid.Row="1" Grid.Column="1" FontSize="15" Width="150" ItemsSource="{Binding Inspectors}" SelectedValue="{Binding Inspector, ValidatesOnDataErrors=True, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+                <Label Grid.Row="1" Grid.Column="0" FontSize="15" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="150">Инспектор</Label>
+                <ComboBox Grid.Row="1" Grid.Column="1" FontSize="15" Width="150" ItemsSource="{Binding Inspectors}" SelectedItem="{Binding SelectedInspector, ValidatesOnDataErrors=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} ({1})">
+                                        <Binding Path="Name"/>
+                                        <Binding Path="Number"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <!--Дата-->
                 <Label Grid.Row="2" Grid.Column="0" FontSize="15" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="150">Дата инспекции</Label>
