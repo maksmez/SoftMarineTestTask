@@ -90,6 +90,10 @@
     <Compile Include="Migrations\202502071356163_AddInspectorRelationUpdate.Designer.cs">
       <DependentUpon>202502071356163_AddInspectorRelationUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502101519553_FixInspection.cs" />
+    <Compile Include="Migrations\202502101519553_FixInspection.Designer.cs">
+      <DependentUpon>202502101519553_FixInspection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\Inspector.cs" />
     <Compile Include="ViewModel\EditInspectionViewModel.cs" />
     <Compile Include="View\AddInspection.xaml.cs">
@@ -163,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202502071356163_AddInspectorRelationUpdate.resx">
       <DependentUpon>202502071356163_AddInspectorRelationUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502101519553_FixInspection.resx">
+      <DependentUpon>202502101519553_FixInspection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

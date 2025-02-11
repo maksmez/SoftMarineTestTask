@@ -27,12 +27,12 @@
         <StackPanel Orientation="Horizontal" Background="Aquamarine" Grid.Column="0" Grid.Row="1">
             <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Инспектор</Label>
             <ComboBox HorizontalAlignment="Right" VerticalAlignment="Center" Width="200"
-          ItemsSource="{Binding Inspectors}">
+          ItemsSource="{Binding Inspectors}" SelectedItem="{Binding SelectedInspector, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} ({1})">
+                                <MultiBinding StringFormat="{}{0} {1}">
                                     <Binding Path="Name"/>
                                     <Binding Path="Number"/>
                                 </MultiBinding>
@@ -45,7 +45,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" Background="Purple" Grid.Column="2" Grid.Row="1">
             <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Название</Label>
-            <TextBox HorizontalAlignment="Right"  VerticalAlignment="Center" FontSize="15" Width="150"></TextBox>
+            <TextBox HorizontalAlignment="Right"  VerticalAlignment="Center" FontSize="15" Width="150" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Background="ForestGreen" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" >

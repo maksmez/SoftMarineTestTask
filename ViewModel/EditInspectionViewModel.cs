@@ -127,21 +127,22 @@ namespace SoftMarine.ViewModel
 
             using (var context = new SoftMarinDbContext())
             {
-                var inspectionToUpdate = context.Inspections.Find(inspection.Id);
+                var inspectionToUpdate = context.Inspections.Include("Remarks").FirstOrDefault(i => i.Id == inspection.Id);
                 if (inspectionToUpdate != null)
                 {
                     inspectionToUpdate.Name = Name;
                     inspectionToUpdate.Date = Date;
                     inspectionToUpdate.InspectorId = SelectedInspector.Id;
                     inspectionToUpdate.Comment = Comment;
-                    // Удаляем старые замечания из базы
+
+                    // Удаляем замечания, которых больше нет
                     var remarksToRemove = inspectionToUpdate.Remarks
                         .Where(r => !Remarks.Any(newR => newR.Id == r.Id))
                         .ToList();
                     context.Remarks.RemoveRange(remarksToRemove);
 
-                    // Обновляем существующие и добавляем новые замечания
-                    foreach (var remark in Remarks)
+                    // Обновляем существующие замечания
+                    foreach (var remark in Remarks.Where(r => r.Id != 0)) // Только те, что уже в БД
                     {
                         var existingRemark = inspectionToUpdate.Remarks.FirstOrDefault(r => r.Id == remark.Id);
                         if (existingRemark != null)
@@ -150,21 +151,27 @@ namespace SoftMarine.ViewModel
                             existingRemark.Date = remark.Date;
                             existingRemark.Comment = remark.Comment;
                         }
-                        else
-                        {
-                            // Добавляем новое замечание, связанное с текущей инспекцией
-                            inspectionToUpdate.Remarks.Add(new Remark
-                            {
-                                Text = remark.Text,
-                                Date = remark.Date,
-                                Comment = remark.Comment,
-                                InspectionId = inspectionToUpdate.Id // Указываем внешний ключ
-                            });
-                        }
                     }
+
+                    // Добавляем новые замечания в `context.Remarks`
+                    var newRemarks = Remarks.Where(r => r.Id == 0)
+                        .Select(r => new Remark
+                        {
+                            Text = r.Text,
+                            Date = r.Date,
+                            Comment = r.Comment,
+                            InspectionId = inspectionToUpdate.Id
+                        }).ToList();
+
+                    if (newRemarks.Any())
+                    {
+                        context.Remarks.AddRange(newRemarks);
+                    }
+
                     context.SaveChanges();
                 }
             }
+
             MessageBox.Show($"Инспекция изменена!", "Изменение инспекции", MessageBoxButton.OK, MessageBoxImage.Information);
 
             RequestClose?.Invoke();

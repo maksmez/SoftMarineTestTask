@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace SoftMarine
 {
@@ -18,12 +19,16 @@ namespace SoftMarine
         private ObservableCollection<Inspection> _inspections;
         private ObservableCollection<Inspector> _inspectors;
         private Inspection _selectedInspection;
+        private Inspector _selectedInspector;
+        private string _searchText;
+        private DispatcherTimer _filterTimer; // Таймер для задержки поиска при вводе текста
+
         private readonly INavigationService _navigationService;
 
         public ICommand OpenAddInspectionCommand { get; } //Команда для открытия окна добавления инспекии
         public ICommand DeleteInspectionCommand { get; } // Команда для удаления
         public ICommand EditInspectionCommand { get; } // Команда для открытия окна редактирования инспекции
-
+        public ICommand FilterByInspectorCommand {  get; } //Команда для фильтрации
         public ObservableCollection<Inspection> Inspections
         {
             get => _inspections;
@@ -57,23 +62,91 @@ namespace SoftMarine
                 (EditInspectionCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+        public Inspector SelectedInspector
+        {
+            get => _selectedInspector;
+            set
+            {
+                _selectedInspector = value;
+                //Выполняем фильтрацию при выборе инспектора
+                GetInspections();
+                OnPropertyChanged(nameof(SelectedInspector));
+            }
+        }
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                _filterTimer.Stop();
+                _filterTimer.Start(); // Запускаем таймер при изменении текста
+                OnPropertyChanged(nameof(SelectedInspector));
+            }
+        }
         public AllInspectionsViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             OpenAddInspectionCommand = new RelayCommand(OpenAddInspectionWindow);
             DeleteInspectionCommand = new RelayCommand(DeleteInspection, IsSelectInspection);
             EditInspectionCommand = new RelayCommand(EditInspection, IsSelectInspection);
+            FilterByInspectorCommand = new RelayCommand(GetInspections);
+           
             Inspections = new ObservableCollection<Inspection>();
-            LoadInspections(); // Загружаем данные при создании ViewModel
+            GetInspections(); // Загружаем данные при создании ViewModel
+
             Inspectors = InspectorService.GetInspectors();
+            // Создаем фиктивный объект "Все инспекторы"
+            var allInspectorsOption = new Inspector { Id = 0, Name = "Все инспекторы" };
+            // Добавляем в начало списка
+            Inspectors.Insert(0, allInspectorsOption);
+            SelectedInspector = allInspectorsOption;
+
+            // Таймер для задержки поиска при вводе текста. Выполняем фильтрацию только после 300 мс
+            _filterTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+            _filterTimer.Tick += (s, e) =>
+            {
+                _filterTimer.Stop();
+                GetInspections();
+            };
+        }
+
+        public void GetInspections()
+        {
+            try
+            {
+                using (var context = new SoftMarinDbContext())
+                {
+                    IEnumerable<Inspection> FilteredInspections = context.Inspections
+                     .Include(x => x.Remarks)
+                     .Include(i => i.Inspector)
+                     .AsEnumerable() // Фильтрация выполняется в памяти, если данных много, нужно переработать
+                     .Where(i =>
+                         (SelectedInspector == null || SelectedInspector.Id == 0 || 
+                         (i.Inspector != null && i.Inspector.Id == SelectedInspector.Id)) &&
+                         (string.IsNullOrEmpty(SearchText) || i.Name.Contains(SearchText))
+                     );
+
+
+                    // Очищаем коллекцию и добавляем загруженные данные
+                    Inspections.Clear();
+                    foreach (var inspection in FilteredInspections)
+                    {
+                        Inspections.Add(inspection);
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"Произошла ошибка!\n{ex}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
         }
 
         private void EditInspection()
         {
-            _navigationService.OpenEditInspectionWindow(SelectedInspection, LoadInspections);
+            _navigationService.OpenEditInspectionWindow(SelectedInspection, GetInspections);
         }
-
 
         private void DeleteInspection()
         {
@@ -92,9 +165,8 @@ namespace SoftMarine
                         context.SaveChanges();
                     }
                 }
-
                 // Обновляем список инспекций
-                LoadInspections();
+                GetInspections();
             }
         }
 
@@ -103,34 +175,10 @@ namespace SoftMarine
             return SelectedInspection != null;
         }
 
-
         private void OpenAddInspectionWindow()
         {
-            _navigationService.OpenAddInspectionWindow(LoadInspections);
+            _navigationService.OpenAddInspectionWindow(GetInspections);
         }
-
-        // Метод для загрузки инспекций из базы данных
-        public void LoadInspections()
-        {
-            using (var context = new SoftMarinDbContext())
-            {
-                // Загружаем инспекции из базы данных
-                var inspections = context.Inspections
-                    .Include(x=>x.Remarks).Include(y=>y.Inspector) // Если нужно загрузить связанные замечания
-                    .ToList();
-
-                // Очищаем коллекцию и добавляем загруженные данные
-                Inspections.Clear();
-                foreach (var inspection in inspections)
-                {
-                    Inspections.Add(inspection);
-                }
-            }
-        }
-
-
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
