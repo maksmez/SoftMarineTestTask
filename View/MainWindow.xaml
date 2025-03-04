@@ -3,29 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SoftMarine" d:DataContext="{d:DesignInstance Type=local:AllInspectionsViewModel}"
+        xmlns:local="clr-namespace:SoftMarine"
         mc:Ignorable="d"
-        Title="Управление инспекциями" Height="450" Width="800">
-
-    <Grid ShowGridLines="True"> 
+        Title="Управление инспекциями" 
+        Height="450" Width="800">
+  
+    <Grid> 
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
 
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition  Height=".15*"></RowDefinition>
+            <RowDefinition Height=".15*"></RowDefinition>
             <RowDefinition Height=".15*"></RowDefinition>
             <RowDefinition Height=".13*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15" Grid.Column="0" Grid.Row="0">Инспекции</Label>
-        <Label HorizontalAlignment="Right"  VerticalAlignment="Center" FontSize="15" Grid.Column="1" Grid.Row="0" Background="Gray">Справочник "Инспекторы"</Label>
+        <Label Margin="10,0" HorizontalAlignment="Left"  VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" FontSize="30" >Инспекции</Label>
+        <Button HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Padding="8" Margin="10,0" Command="{Binding OpenAllInspectorsCommand}">Справочник "Инспекторы"</Button>
 
-
-        <StackPanel Orientation="Horizontal" Background="Aquamarine" Grid.Column="0" Grid.Row="1">
-            <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Инспектор</Label>
+        <StackPanel Margin="10,0" Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+            <Label HorizontalAlignment="Left"  VerticalAlignment="Center">Инспектор</Label>
             <ComboBox HorizontalAlignment="Right" VerticalAlignment="Center" Width="200"
           ItemsSource="{Binding Inspectors}" SelectedItem="{Binding SelectedInspector, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBox.ItemTemplate>
@@ -43,17 +43,18 @@
             </ComboBox>
 
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Background="Purple" Grid.Column="2" Grid.Row="1">
-            <Label HorizontalAlignment="Left"  VerticalAlignment="Center" FontSize="15">Название</Label>
-            <TextBox HorizontalAlignment="Right"  VerticalAlignment="Center" FontSize="15" Width="150" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+        
+        <StackPanel Margin="10,0" Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+            <Label HorizontalAlignment="Left"  VerticalAlignment="Center">Название  </Label>
+            <TextBox HorizontalAlignment="Right"  VerticalAlignment="Center" Width="200" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Background="ForestGreen" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" >
-            <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Left" Command="{Binding OpenAddInspectionCommand}">Добавить</Button>
-            <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Center" Command="{Binding DeleteInspectionCommand}">Удалить</Button>
-            <Button Margin="5" FontSize="15" Height="30" Width="80" HorizontalAlignment="Right" Command="{Binding EditInspectionCommand}">Изменить</Button>
+        <StackPanel Margin="10,0" Orientation="Horizontal"  Grid.Column="1" Grid.RowSpan="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right"  >
+            <Button Margin="0,0,10,0" Height="40" Width="100" HorizontalAlignment="Left" Command="{Binding OpenAddInspectionCommand}">Добавить</Button>
+            <Button Margin="10,0" Height="40" Width="100" HorizontalAlignment="Center" Command="{Binding DeleteInspectionCommand}">Удалить</Button>
+            <Button Margin="10,0,0,0" Height="40" Width="100" HorizontalAlignment="Right" Command="{Binding OpenEditInspectionCommand}">Изменить</Button>
         </StackPanel>
-        <DataGrid IsReadOnly="True" SelectionMode="Single" FontSize="15" AutoGenerateColumns="False" Grid.ColumnSpan="2" Grid.Row="3" Background="Orange" ItemsSource="{Binding Inspections}" SelectedItem="{Binding SelectedInspection}" MouseDoubleClick="DataGrid_MouseDoubleClick">
+        <DataGrid  IsReadOnly="True" SelectionMode="Single" AutoGenerateColumns="False" Grid.ColumnSpan="2" Grid.Row="3" ItemsSource="{Binding Inspections}" SelectedItem="{Binding SelectedInspection}" MouseDoubleClick="DataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="*" Header="Название" Binding="{Binding Name}" />
                 <DataGridTextColumn Width="100" Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" />

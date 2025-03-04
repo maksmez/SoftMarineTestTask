@@ -119,7 +119,7 @@ namespace SoftMarine.ViewModel
                 Comment = Comment,
                 Remarks = Remarks.ToList()
             };
-            if (!InspectionValidator.ValidateInspection(inspection_form, out var errorMessages))
+            if (!Validator.ValidateInspection(inspection_form, out var errorMessages))
             {
                 MessageBox.Show($"Проверьте поля на ошибки:\n{string.Join("\n", errorMessages)}", "Ошибка в данных!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

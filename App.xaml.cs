@@ -4,10 +4,8 @@ namespace SoftMarine
 {
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
-            base.OnStartup(e);
-
             var navigationService = new NavigationService();
             var mainViewModel = new AllInspectionsViewModel(navigationService);
 

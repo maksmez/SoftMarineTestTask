@@ -10,5 +10,6 @@ namespace SoftMarine
     {
         void OpenAddInspectionWindow(Action updateMainGrid);
         void OpenEditInspectionWindow(Inspection inspection, Action updateMainGrid);
+        void OpenAllInspectorsWindow(Action updateInspectors);
     }
 }

@@ -26,8 +26,9 @@ namespace SoftMarine
         private readonly INavigationService _navigationService;
 
         public ICommand OpenAddInspectionCommand { get; } //Команда для открытия окна добавления инспекии
+        public ICommand OpenEditInspectionCommand { get; } // Команда для открытия окна редактирования инспекции
+        public ICommand OpenAllInspectorsCommand {  get; } //Команда для открытия окна с инспекторами
         public ICommand DeleteInspectionCommand { get; } // Команда для удаления
-        public ICommand EditInspectionCommand { get; } // Команда для открытия окна редактирования инспекции
         public ICommand FilterByInspectorCommand {  get; } //Команда для фильтрации
         public ObservableCollection<Inspection> Inspections
         {
@@ -59,7 +60,7 @@ namespace SoftMarine
                 // Обновляем доступность кнопки удаления
                 (DeleteInspectionCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 // Обновляем доступность кнопки редактирования
-                (EditInspectionCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (OpenEditInspectionCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
         public Inspector SelectedInspector
@@ -89,18 +90,14 @@ namespace SoftMarine
             _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             OpenAddInspectionCommand = new RelayCommand(OpenAddInspectionWindow);
             DeleteInspectionCommand = new RelayCommand(DeleteInspection, IsSelectInspection);
-            EditInspectionCommand = new RelayCommand(EditInspection, IsSelectInspection);
+            OpenEditInspectionCommand = new RelayCommand(OpenEditInspectionWindow, IsSelectInspection);
             FilterByInspectorCommand = new RelayCommand(GetInspections);
+            OpenAllInspectorsCommand = new RelayCommand(OpenAllInspectorsWindow);
            
             Inspections = new ObservableCollection<Inspection>();
             GetInspections(); // Загружаем данные при создании ViewModel
+            GetInspectors();
 
-            Inspectors = InspectorService.GetInspectors();
-            // Создаем фиктивный объект "Все инспекторы"
-            var allInspectorsOption = new Inspector { Id = 0, Name = "Все инспекторы" };
-            // Добавляем в начало списка
-            Inspectors.Insert(0, allInspectorsOption);
-            SelectedInspector = allInspectorsOption;
 
             // Таймер для задержки поиска при вводе текста. Выполняем фильтрацию только после 300 мс
             _filterTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
@@ -110,7 +107,20 @@ namespace SoftMarine
                 GetInspections();
             };
         }
-
+        public void GetInspectors()
+        {
+            Inspectors = InspectorService.GetInspectors();
+            // Создаем фиктивный объект "Все инспекторы"
+            var allInspectorsOption = new Inspector { Id = 0, Name = "Все инспекторы" };
+            // Добавляем в начало списка
+            Inspectors.Insert(0, allInspectorsOption);
+            SelectedInspector = allInspectorsOption;
+        }
+        private void OpenAllInspectorsWindow()
+        {
+            _navigationService.OpenAllInspectorsWindow(GetInspectors);
+        }
+        
         public void GetInspections()
         {
             try
@@ -143,7 +153,7 @@ namespace SoftMarine
 
         }
 
-        private void EditInspection()
+        private void OpenEditInspectionWindow()
         {
             _navigationService.OpenEditInspectionWindow(SelectedInspection, GetInspections);
         }

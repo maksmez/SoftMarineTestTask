@@ -30,7 +30,7 @@ namespace SoftMarine
         {
             if (DataContext is AllInspectionsViewModel viewModel && viewModel.SelectedInspection != null)
             {
-                viewModel.EditInspectionCommand.Execute(null);
+                viewModel.OpenEditInspectionCommand.Execute(null);
             }
         }
     }

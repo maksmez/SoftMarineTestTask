@@ -72,6 +72,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\AllInspectors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\EditInspection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -80,7 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="InspectionValidator.cs" />
+    <Compile Include="Validator.cs" />
     <Compile Include="InspectorService.cs" />
     <Compile Include="Migrations\202502071318152_AddInspectorRelation.cs" />
     <Compile Include="Migrations\202502071318152_AddInspectorRelation.Designer.cs">
@@ -95,6 +99,7 @@
       <DependentUpon>202502101519553_FixInspection.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Inspector.cs" />
+    <Compile Include="ViewModel\AllInspectorsViewModel.cs" />
     <Compile Include="ViewModel\EditInspectionViewModel.cs" />
     <Compile Include="View\AddInspection.xaml.cs">
       <DependentUpon>AddInspection.xaml</DependentUpon>
@@ -128,6 +133,9 @@
     <Compile Include="Model\Remark.cs" />
     <Compile Include="SoftMarinDbContext.cs" />
     <Compile Include="Model\Inspection.cs" />
+    <Compile Include="View\AllInspectors.xaml.cs">
+      <DependentUpon>AllInspectors.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\EditInspection.xaml.cs">
       <DependentUpon>EditInspection.xaml</DependentUpon>
     </Compile>
